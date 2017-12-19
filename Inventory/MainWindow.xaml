@@ -6,7 +6,23 @@
         xmlns:local="clr-namespace:Inventory"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
+    <Grid Name="grido" >
+
+        <Grid.RowDefinitions>
+            <RowDefinition  />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition  />
+            <ColumnDefinition  />
+            <ColumnDefinition  />
+        </Grid.ColumnDefinitions>
+
+        <Canvas x:Name="canvas">
+            
         
+        <Rectangle  x:Name="rect1" Fill="Red" HorizontalAlignment="Left" Height="106" Stroke="Black" VerticalAlignment="Top" Width="172"  MouseLeftButtonDown="rect_MouseLeftButtonDown" MouseLeftButtonUp="rect_MouseLeftButtonUp" MouseMove="rect_MouseMove" Grid.Column="1" Grid.Row="1"/>
+        </Canvas>
     </Grid>
 </Window>
