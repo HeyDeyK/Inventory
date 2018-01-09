@@ -23,7 +23,7 @@ namespace Inventory
     public partial class MainWindow : Window
     {
         private bool _isRectDragInProg;
-        int[,] poleveci = new int[6, 5];
+        int[,] poleveci = new int[5,7];
         double puvodTop;
         double puvodLeft;
         public MainWindow()
@@ -39,7 +39,6 @@ namespace Inventory
         private void SnapToGrid(UIElement element, double vyska,double sirka)
         {
             int GRID_SIZE = 50;
-            
             double xSnap = Canvas.GetLeft(element) % GRID_SIZE;
             double ySnap = Canvas.GetTop(element) % GRID_SIZE;
             
@@ -71,11 +70,6 @@ namespace Inventory
 
             int xpozice = Convert.ToInt32(xSnap)/GRID_SIZE;
             int ypozice = Convert.ToInt32(ySnap)/GRID_SIZE;
-            if (poleveci[xpozice,ypozice]==0)
-            {
-                Console.WriteLine("MUZEME");
-            }
-
             if (xSnap + sirka > 200)
             {
                 xSnap = 250 - sirka;
@@ -92,27 +86,99 @@ namespace Inventory
             {
                 ySnap = 0;
             }
-
-            Canvas.SetLeft(element, xSnap);
-            Canvas.SetTop(element, ySnap);
-
-            Console.WriteLine("X: " + xSnap);
-            Console.WriteLine("Sirka: " + sirka);
-            Console.WriteLine("Y: " + ySnap);
-            Console.WriteLine("Vyska: " + vyska);
-            Console.WriteLine(poleveci[0,0]);
+            int zakazat = PoleVyska(vyska, xpozice, ypozice);
+            int zakazat2 = PoleSirka(sirka, xpozice, ypozice);
+            if(zakazat==0 && zakazat2==0)
+            {
+                Canvas.SetLeft(element, xSnap);
+                Canvas.SetTop(element, ySnap);
+            }
+            else
+            {
+                Canvas.SetLeft(element, puvodLeft);
+                Canvas.SetTop(element, puvodTop);
+            }
         }
         private void rect_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             
             _isRectDragInProg = true;
             var rectangle = sender as System.Windows.Shapes.Rectangle;
-            puvodLeft = rectangle.Width;
-            puvodTop = rectangle.Height;
+            puvodLeft = Canvas.GetLeft(rectangle);
+            puvodTop = Canvas.GetTop(rectangle);
             rectangle.CaptureMouse();
             
         }
-
+        public int PoleVyska(double vyska,int xpozice,int ypozice)
+        {
+            int ctr = 0;
+            int zakazat = 0;
+            while (true)
+            {
+                if (ctr == vyska / 50)
+                {
+                    break;
+                }
+                else
+                {
+                    if (poleveci[xpozice + ctr, ypozice] == 0)
+                    {
+                        Console.WriteLine("MUZEME");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Chyba");
+                        zakazat = 1;
+                        break;
+                    }
+                    ctr++;
+                }
+            }
+            return zakazat;
+        }
+        public void PoleVyskaSet(double vyska, int xpozice, int ypozice)
+        {
+            int ctr = 0;
+            while (true)
+            {
+                if (ctr == vyska / 50)
+                {
+                    break;
+                }
+                else
+                {
+                    poleveci[xpozice + ctr, ypozice] = 1;
+                    ctr++;
+                }
+            }
+        }
+        public int PoleSirka(double sirka, int xpozice, int ypozice)
+        {
+            int ctr = 0;
+            int zakazat = 0;
+            while (true)
+            {
+                if (ctr == sirka / 50)
+                {
+                    break;
+                }
+                else
+                {
+                    if (poleveci[xpozice, ypozice + ctr] == 0)
+                    {
+                        Console.WriteLine("MUZEME");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Chyba");
+                        zakazat = 1;
+                        break;
+                    }
+                    ctr++;
+                }
+            }
+            return zakazat;
+        }
 
         private void rect_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {

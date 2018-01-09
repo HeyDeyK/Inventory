@@ -23,9 +23,9 @@
                     </DrawingBrush.Drawing>
                 </DrawingBrush>
             </Canvas.Background>
-            <Rectangle Height="50" Canvas.Left="100" Canvas.Top="200" Width="50" Fill="#FFF70000" MouseLeftButtonDown="rect_MouseLeftButtonDown" MouseLeftButtonUp="rect_MouseLeftButtonUp" MouseMove="rect_MouseMove"/>
-            <Rectangle Height="100" Canvas.Left="150" Canvas.Top="50" Width="50" Fill="#FF0038F7" MouseLeftButtonDown="rect_MouseLeftButtonDown" MouseLeftButtonUp="rect_MouseLeftButtonUp" MouseMove="rect_MouseMove"/>
-            <Rectangle Height="50" Canvas.Left="0" Canvas.Top="00" Width="100" Fill="#FFD5F700" MouseLeftButtonDown="rect_MouseLeftButtonDown" MouseLeftButtonUp="rect_MouseLeftButtonUp" MouseMove="rect_MouseMove"/>
+            <Rectangle Height="50" Canvas.Left="100" Canvas.Top="0" Width="50" Fill="#FFF70000" MouseLeftButtonDown="rect_MouseLeftButtonDown" MouseLeftButtonUp="rect_MouseLeftButtonUp" MouseMove="rect_MouseMove"/>
+            <Rectangle Height="100" Canvas.Left="0" Canvas.Top="50" Width="50" Fill="#FF0038F7" MouseLeftButtonDown="rect_MouseLeftButtonDown" MouseLeftButtonUp="rect_MouseLeftButtonUp" MouseMove="rect_MouseMove"/>
+            <Rectangle Height="50" Canvas.Left="0" Canvas.Top="0" Width="100" Fill="#FFD5F700" MouseLeftButtonDown="rect_MouseLeftButtonDown" MouseLeftButtonUp="rect_MouseLeftButtonUp" MouseMove="rect_MouseMove"/>
 
         </Canvas>
     </Grid>
