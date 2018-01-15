@@ -31,9 +31,10 @@ namespace Inventory
         public MainWindow()
         {
             InitializeComponent();
-            GetRectangle();
+            
             AddRectangle();
             
+
         }
         private void SnapToGrid(UIElement element, double vyska,double sirka)
         {
@@ -109,7 +110,7 @@ namespace Inventory
             {
                 double leftpos = Canvas.GetLeft(rect);
                 double toppos = Canvas.GetTop(rect);
-
+                Console.WriteLine("STRING: "+rect.Fill);
                 objekty.Add(new Objekt()
                 {
                     name = rect.Name,
@@ -134,11 +135,35 @@ namespace Inventory
                 Rectangle r = new Rectangle();
                 r.Width = record.width;
                 r.Height = record.height;
-
-                r.Fill = new ImageBrush
+                if(r.Width == 50 && r.Height ==50)
                 {
-                    ImageSource = new BitmapImage(new Uri(@"C:\Users\Ondra\source\repos\Inventory\Inventory\img\dia.png", UriKind.Absolute))
-                };
+                    r.Fill = new ImageBrush
+                    {
+                        ImageSource = new BitmapImage(new Uri(@"C:\Users\Ondra\source\repos\Inventory\Inventory\img\dia.png", UriKind.Absolute))
+                    };
+                }
+                else if(r.Width == 100 && r.Height == 50)
+                {
+                    r.Fill = new ImageBrush
+                    {
+                        ImageSource = new BitmapImage(new Uri(@"C:\Users\Ondra\source\repos\Inventory\Inventory\img\gun.png", UriKind.Absolute))
+                    };
+                }
+                else if (r.Width == 50 && r.Height == 100)
+                {
+                    r.Fill = new ImageBrush
+                    {
+                        ImageSource = new BitmapImage(new Uri(@"C:\Users\Ondra\source\repos\Inventory\Inventory\img\axe.png", UriKind.Absolute))
+                    };
+                }
+                else
+                {
+                    r.Fill = new ImageBrush
+                    {
+                        ImageSource = new BitmapImage(new Uri(@"C:\Users\Ondra\source\repos\Inventory\Inventory\img\dia.png", UriKind.Absolute))
+                    };
+                }
+
                 r.MouseLeftButtonDown += rect_MouseLeftButtonDown;
                 r.MouseLeftButtonUp += rect_MouseLeftButtonUp;
                 r.MouseMove += rect_MouseMove;
@@ -146,6 +171,11 @@ namespace Inventory
                 Canvas.SetTop(r, record.TopPos);
 
                 canvas.Children.Add(r);
+                int GRID_SIZE = 50;
+                int xpozice = Convert.ToInt32(record.LeftPos) / GRID_SIZE;
+                int ypozice = Convert.ToInt32(record.TopPos) / GRID_SIZE;
+                PoleVyskaSet(r.Height,xpozice , ypozice,1);
+                PoleSirkaSet(r.Width, xpozice, ypozice,1);
             }
         }
         public void KontrolaPresahu(double sirka, double vyska)
@@ -187,7 +217,38 @@ namespace Inventory
             rectangle.CaptureMouse();
             
         }
-        public int PoleVyska(double vyska,int xpozice,int ypozice)
+        
+
+        private void rect_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            _isRectDragInProg = false;
+            var rectando = sender as System.Windows.Shapes.Rectangle;
+            rectando.ReleaseMouseCapture();
+            double vyskaRec = rectando.Height;
+            double sirkaRec = rectando.Width;
+            SnapToGrid(rectando,vyskaRec,sirkaRec);
+            GetRectangle();
+        }
+
+        private void rect_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            var rectando = sender as System.Windows.Shapes.Rectangle;
+            if (!_isRectDragInProg) return;
+
+
+            // get the position of the mouse relative to the Canvas
+            var mousePos = e.GetPosition(canvas);
+
+            // center the rect on the mouse
+            double left = mousePos.X - (rectando.ActualWidth / 2);
+            double top = mousePos.Y - (rectando.ActualHeight / 2);
+            Canvas.SetLeft(rectando, left);
+            Canvas.SetTop(rectando, top);
+            
+
+        }
+
+        public int PoleVyska(double vyska, int xpozice, int ypozice)
         {
             int ctr = 0;
             int zakazat = 0;
@@ -201,11 +262,11 @@ namespace Inventory
                 {
                     if (poleveci[xpozice, ypozice + ctr] == 0)
                     {
-                        
+
                     }
                     else
                     {
-                        
+
                         zakazat = 1;
                         break;
                     }
@@ -214,7 +275,7 @@ namespace Inventory
             }
             return zakazat;
         }
-        public void PoleVyskaSet(double vyska, int xpozice,int ypozice,int hodnota)
+        public void PoleVyskaSet(double vyska, int xpozice, int ypozice, int hodnota)
         {
             int ctr = 0;
             while (true)
@@ -225,19 +286,19 @@ namespace Inventory
                 }
                 else
                 {
-                    poleveci[xpozice , ypozice + ctr] = hodnota;
-                    if(hodnota==0)
+                    poleveci[xpozice, ypozice + ctr] = hodnota;
+                    if (hodnota == 0)
                     {
                     }
                     else
                     {
                     }
-                    
-                    ctr++; 
+
+                    ctr++;
                 }
             }
         }
-        public void PoleSirkaSet(double sirka, int xpozice, int ypozice,int hodnota)
+        public void PoleSirkaSet(double sirka, int xpozice, int ypozice, int hodnota)
         {
             int ctr = 0;
             while (true)
@@ -283,35 +344,6 @@ namespace Inventory
                 }
             }
             return zakazat;
-        }
-
-        private void rect_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            _isRectDragInProg = false;
-            var rectando = sender as System.Windows.Shapes.Rectangle;
-            rectando.ReleaseMouseCapture();
-            double vyskaRec = rectando.Height;
-            double sirkaRec = rectando.Width;
-            SnapToGrid(rectando,vyskaRec,sirkaRec);
-
-        }
-
-        private void rect_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            var rectando = sender as System.Windows.Shapes.Rectangle;
-            if (!_isRectDragInProg) return;
-
-
-            // get the position of the mouse relative to the Canvas
-            var mousePos = e.GetPosition(canvas);
-
-            // center the rect on the mouse
-            double left = mousePos.X - (rectando.ActualWidth / 2);
-            double top = mousePos.Y - (rectando.ActualHeight / 2);
-            Canvas.SetLeft(rectando, left);
-            Canvas.SetTop(rectando, top);
-            
-
         }
         public void KontrolaPresahu(double xSnap,double ySnap,double sirka,double vyska)
         {
