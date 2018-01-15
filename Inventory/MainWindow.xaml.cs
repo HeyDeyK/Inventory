@@ -26,27 +26,21 @@ namespace Inventory
         int[,] poleveci = new int[5,7];
         double puvodTop;
         double puvodLeft;
+        double xSnap = 0;
+        double ySnap = 0;
         public MainWindow()
         {
             InitializeComponent();
+            GetRectangle();
+            AddRectangle();
             
-            poleveci[0, 0] = 1;
-            poleveci[0, 1] = 1;
-            poleveci[0, 2] = 1;
-            poleveci[1, 0] = 1;
-            poleveci[2, 0] = 1;
         }
         private void SnapToGrid(UIElement element, double vyska,double sirka)
         {
             int GRID_SIZE = 50;
-            double xSnap = Canvas.GetLeft(element) % GRID_SIZE;
-            double ySnap = Canvas.GetTop(element) % GRID_SIZE;
-            
+            xSnap = Canvas.GetLeft(element) % GRID_SIZE;
+            ySnap = Canvas.GetTop(element) % GRID_SIZE;
 
-            // If it's less than half the grid size, snap left/up 
-            // (by subtracting the remainder), 
-            // otherwise move it the remaining distance of the grid size right/down
-            // (by adding the remaining distance to the next grid point).
             if (xSnap <= GRID_SIZE / 2.0)
             {
                 xSnap *= -1;
@@ -68,11 +62,98 @@ namespace Inventory
             xSnap += Canvas.GetLeft(element);
             ySnap += Canvas.GetTop(element);
 
+            KontrolaPresahu(sirka, vyska);
+
             int xpozice = Convert.ToInt32(xSnap)/GRID_SIZE;
             int ypozice = Convert.ToInt32(ySnap)/GRID_SIZE;
+
+            
+            
+            int zakazat = PoleVyska(vyska, xpozice, ypozice);
+            int zakazat2 = PoleSirka(sirka, xpozice, ypozice);
+
+            if (zakazat==0 && zakazat2==0)
+            {
+                Canvas.SetLeft(element, xSnap);
+                Canvas.SetTop(element, ySnap);
+
+                int xpozicenula = Convert.ToInt32(puvodLeft) / GRID_SIZE;
+                int ypozicenula = Convert.ToInt32(puvodTop) / GRID_SIZE;
+
+                PoleVyskaSet(vyska, xpozicenula, ypozicenula, 0);
+                PoleSirkaSet(sirka, xpozicenula, ypozicenula, 0);
+                
+                PoleVyskaSet(vyska, xpozice,ypozice,1);
+                PoleSirkaSet(sirka, xpozice, ypozice,1);
+                
+
+            }
+            else
+            {
+                Canvas.SetLeft(element, puvodLeft);
+                Canvas.SetTop(element, puvodTop);
+
+                int xpozicenula = Convert.ToInt32(puvodLeft) / GRID_SIZE;
+                int ypozicenula = Convert.ToInt32(puvodTop) / GRID_SIZE;
+
+                PoleVyskaSet(vyska, xpozicenula, ypozicenula, 1);
+                PoleSirkaSet(sirka, xpozicenula, ypozicenula, 1);
+            }
+        }
+        private void GetRectangle()
+        {
+            var engine = new FileHelperEngine<Objekt>();
+
+            var objekty = new List<Objekt>();
+            foreach (Rectangle rect in canvas.Children.OfType<Rectangle>())
+            {
+                double leftpos = Canvas.GetLeft(rect);
+                double toppos = Canvas.GetTop(rect);
+
+                objekty.Add(new Objekt()
+                {
+                    name = rect.Name,
+                    LeftPos = leftpos,
+                    TopPos = toppos,
+                    height = rect.Height,
+                    width = rect.Width
+                });
+
+                engine.WriteFile("Output.Txt", objekty);
+            }
+        }
+        public void AddRectangle()
+        {
+            
+
+            var engine = new FileHelperEngine<Objekt>();
+            var records = engine.ReadFile("Output.txt");
+
+            foreach (var record in records)
+            {
+                Rectangle r = new Rectangle();
+                r.Width = record.width;
+                r.Height = record.height;
+
+                r.Fill = new ImageBrush
+                {
+                    ImageSource = new BitmapImage(new Uri(@"C:\Users\Ondra\source\repos\Inventory\Inventory\img\dia.png", UriKind.Absolute))
+                };
+                r.MouseLeftButtonDown += rect_MouseLeftButtonDown;
+                r.MouseLeftButtonUp += rect_MouseLeftButtonUp;
+                r.MouseMove += rect_MouseMove;
+                Canvas.SetLeft(r, record.LeftPos);
+                Canvas.SetTop(r, record.TopPos);
+
+                canvas.Children.Add(r);
+            }
+        }
+        public void KontrolaPresahu(double sirka, double vyska)
+        {
             if (xSnap + sirka > 200)
             {
                 xSnap = 250 - sirka;
+                
             }
             else if (xSnap < 0)
             {
@@ -86,26 +167,23 @@ namespace Inventory
             {
                 ySnap = 0;
             }
-            int zakazat = PoleVyska(vyska, xpozice, ypozice);
-            int zakazat2 = PoleSirka(sirka, xpozice, ypozice);
-            if(zakazat==0 && zakazat2==0)
-            {
-                Canvas.SetLeft(element, xSnap);
-                Canvas.SetTop(element, ySnap);
-            }
-            else
-            {
-                Canvas.SetLeft(element, puvodLeft);
-                Canvas.SetTop(element, puvodTop);
-            }
         }
         private void rect_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             
             _isRectDragInProg = true;
+            int GRID_SIZE = 50;
             var rectangle = sender as System.Windows.Shapes.Rectangle;
             puvodLeft = Canvas.GetLeft(rectangle);
             puvodTop = Canvas.GetTop(rectangle);
+            double vyska = rectangle.Height;
+            double sirka = rectangle.Width;
+            int xpozicenula = Convert.ToInt32(puvodLeft) / GRID_SIZE;
+            int ypozicenula = Convert.ToInt32(puvodTop) / GRID_SIZE;
+            KontrolaPresahu(sirka, vyska);
+            
+            PoleVyskaSet(vyska, xpozicenula, ypozicenula, 0);
+            PoleSirkaSet(sirka, xpozicenula, ypozicenula, 0);
             rectangle.CaptureMouse();
             
         }
@@ -121,13 +199,13 @@ namespace Inventory
                 }
                 else
                 {
-                    if (poleveci[xpozice + ctr, ypozice] == 0)
+                    if (poleveci[xpozice, ypozice + ctr] == 0)
                     {
-                        Console.WriteLine("MUZEME");
+                        
                     }
                     else
                     {
-                        Console.WriteLine("Chyba");
+                        
                         zakazat = 1;
                         break;
                     }
@@ -136,7 +214,7 @@ namespace Inventory
             }
             return zakazat;
         }
-        public void PoleVyskaSet(double vyska, int xpozice, int ypozice)
+        public void PoleVyskaSet(double vyska, int xpozice,int ypozice,int hodnota)
         {
             int ctr = 0;
             while (true)
@@ -147,7 +225,36 @@ namespace Inventory
                 }
                 else
                 {
-                    poleveci[xpozice + ctr, ypozice] = 1;
+                    poleveci[xpozice , ypozice + ctr] = hodnota;
+                    if(hodnota==0)
+                    {
+                    }
+                    else
+                    {
+                    }
+                    
+                    ctr++; 
+                }
+            }
+        }
+        public void PoleSirkaSet(double sirka, int xpozice, int ypozice,int hodnota)
+        {
+            int ctr = 0;
+            while (true)
+            {
+                if (ctr == sirka / 50)
+                {
+                    break;
+                }
+                else
+                {
+                    poleveci[xpozice + ctr, ypozice] = hodnota;
+                    if (hodnota == 0)
+                    {
+                    }
+                    else
+                    {
+                    }
                     ctr++;
                 }
             }
@@ -164,13 +271,11 @@ namespace Inventory
                 }
                 else
                 {
-                    if (poleveci[xpozice, ypozice + ctr] == 0)
+                    if (poleveci[xpozice + ctr, ypozice] == 0)
                     {
-                        Console.WriteLine("MUZEME");
                     }
                     else
                     {
-                        Console.WriteLine("Chyba");
                         zakazat = 1;
                         break;
                     }
@@ -231,8 +336,9 @@ namespace Inventory
         [DelimitedRecord("|")]
         public class Orders
         {
-            public int x;
-            public int y;
+            public string name;
+            public int LeftPos;
+            public int TopPos;
 
 
         }
