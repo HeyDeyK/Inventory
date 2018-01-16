@@ -31,7 +31,7 @@ namespace Inventory
         public MainWindow()
         {
             InitializeComponent();
-            
+            GetRectangle();
             AddRectangle();
             
 
@@ -110,7 +110,6 @@ namespace Inventory
             {
                 double leftpos = Canvas.GetLeft(rect);
                 double toppos = Canvas.GetTop(rect);
-                Console.WriteLine("STRING: "+rect.Fill);
                 objekty.Add(new Objekt()
                 {
                     name = rect.Name,
@@ -139,28 +138,28 @@ namespace Inventory
                 {
                     r.Fill = new ImageBrush
                     {
-                        ImageSource = new BitmapImage(new Uri(@"C:\Users\Ondra\source\repos\Inventory\Inventory\img\dia.png", UriKind.Absolute))
+                        ImageSource = new BitmapImage(new Uri(@"D:\ViletaJeBuh\Inventory\img\dia.png", UriKind.Absolute))
                     };
                 }
                 else if(r.Width == 100 && r.Height == 50)
                 {
                     r.Fill = new ImageBrush
                     {
-                        ImageSource = new BitmapImage(new Uri(@"C:\Users\Ondra\source\repos\Inventory\Inventory\img\gun.png", UriKind.Absolute))
+                        ImageSource = new BitmapImage(new Uri(@"D:\ViletaJeBuh\Inventory\img\gun.png", UriKind.Absolute))
                     };
                 }
                 else if (r.Width == 50 && r.Height == 100)
                 {
                     r.Fill = new ImageBrush
                     {
-                        ImageSource = new BitmapImage(new Uri(@"C:\Users\Ondra\source\repos\Inventory\Inventory\img\axe.png", UriKind.Absolute))
+                        ImageSource = new BitmapImage(new Uri(@"D:\ViletaJeBuh\Inventory\img\axe.png", UriKind.Absolute))
                     };
                 }
                 else
                 {
                     r.Fill = new ImageBrush
                     {
-                        ImageSource = new BitmapImage(new Uri(@"C:\Users\Ondra\source\repos\Inventory\Inventory\img\dia.png", UriKind.Absolute))
+                        ImageSource = new BitmapImage(new Uri(@"D:\ViletaJeBuh\Inventory\img\dia.png", UriKind.Absolute))
                     };
                 }
 
