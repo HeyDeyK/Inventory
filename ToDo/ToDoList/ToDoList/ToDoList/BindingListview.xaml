@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ToDoList.BindingListview">
+    <ContentPage.Content>
+        <StackLayout >
+        <ListView ItemsSource="{Binding Persons}" x:Name="Root">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                            <Grid HeightRequest="100">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" ></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                                    <ColumnDefinition Width="5*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding Notes}" FontAttributes="Bold" Grid.Row="0" Grid.Column="1" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"></Label>
+                                <Button Text="{Binding Age}"
+                                        Command="{Binding Path=BindingContext.SelectedItemCommand, 
+                                        Source={x:Reference Name=Root}}" 
+                                        CommandParameter="{Binding}"
+                                        ></Button>
+                                <Switch Toggled="Switch_OnToggled" Grid.Column="2"></Switch>
+                            </Grid>
+                        </ViewCell>
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

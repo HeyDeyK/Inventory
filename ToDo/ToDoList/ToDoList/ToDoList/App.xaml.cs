@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using ToDoList.Abstract;
 using Xamarin.Forms;
 
 namespace ToDoList
@@ -11,7 +11,8 @@ namespace ToDoList
     {
         public App()
         {
-            MainPage = new NavigationPage(new MainPage());
+            //MainPage = new NavigationPage(new MainPage());
+            MainPage = new NavigationPage(new BindingListview());
         }
 
         protected override void OnStart()
@@ -40,6 +41,20 @@ namespace ToDoList
                     _database = new TodoItemDatabase(DependencyService.Get<IFileHelper>().GetLocalFilePath("TodoSQLite.db3"));
                 }
                 return _database;
+            }
+        }
+        private static DatabaseAccess _databaseAccess;
+
+        public static DatabaseAccess DatabaseAccess
+        {
+            get
+            {
+                if (_databaseAccess == null)
+                {
+                    IFileHelper filehelperInstance = DependencyService.Get<IFileHelper>();
+                    _databaseAccess = new DatabaseAccess(filehelperInstance.GetLocalFilePath("TodoSQLite.db3"));
+                }
+                return _databaseAccess;
             }
         }
     }
