@@ -24,6 +24,7 @@ namespace ToDoList
 
             CreateSampleData();
             this.BindingContext = this;
+            
 
         }
 

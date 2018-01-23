@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvidenceSkladeb", "EvidenceSkladeb\EvidenceSkladeb.csproj", "{CFBC9494-A190-46EB-B8D5-1BCD0E43FFFA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CFBC9494-A190-46EB-B8D5-1BCD0E43FFFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFBC9494-A190-46EB-B8D5-1BCD0E43FFFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFBC9494-A190-46EB-B8D5-1BCD0E43FFFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFBC9494-A190-46EB-B8D5-1BCD0E43FFFA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {52D1EDE4-1363-4C48-AF48-1CC8EF90F8B4}
+	EndGlobalSection
+EndGlobal

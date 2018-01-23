@@ -4,7 +4,7 @@
              x:Class="ToDoList.BindingListview">
     <ContentPage.Content>
         <StackLayout >
-        <ListView ItemsSource="{Binding Persons}" x:Name="Root">
+            <ListView ItemsSource="{Binding Persons}" x:Name="Root">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -17,6 +17,7 @@
                                     <ColumnDefinition Width="2*"></ColumnDefinition>
                                     <ColumnDefinition Width="5*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
+                                <Image x:Name="Tvojemama" Source="check.png"></Image>
                                 <Label Text="{Binding Notes}" FontAttributes="Bold" Grid.Row="0" Grid.Column="1" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"></Label>
                                 <Button Text="{Binding Age}"
                                         Command="{Binding Path=BindingContext.SelectedItemCommand, 
